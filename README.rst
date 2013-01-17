@@ -1,4 +1,3 @@
-=================================================================
 Some scripts for identifying potentially full-length transcripts
 in PacBio transcriptome data.
 
@@ -6,8 +5,6 @@ This is work in progress. Scripts are not well tested :)
 If you have problems please contact etseng@pacificbiosciences.com
 
 Thanks!
-=================================================================
-
 
 File explanation
 ===================
