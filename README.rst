@@ -64,6 +64,11 @@ You can use .primer_info.txt to get the accurate number of 5', 3', and 5'&3' pri
 And filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary will contain all the information.
 
 
+Defining full-length
+=======================
+Right now I define full-length as subreads that have both 5' and 3' primer seen. So if you take filtered_subreads.53seen_trimmed.fa, that should be your set of full-length subreads. If you want to change that definition you can use .primer_info.txt or alter barcode_trimmer.py any way you want. Let me know if you have better or other ideas for defining full-length!
+
+
 Additional scripts that may be useful
 =========================================
 To get all filtered subreads that did not have CCS::
