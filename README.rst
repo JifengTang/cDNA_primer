@@ -59,7 +59,19 @@ After you run barcode_trimmer.py you should get this .txt file which is a table 
 You can use .primer_info.txt to get the accurate number of 5', 3', and 5'&3' primers seen per subreads and ZMW, do::
     scripts/count_5seen.py filtered_subreads.53seen_trimmed.fa.primer_info.txt filtered_subreads.fasta > filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary
 
-And filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary will contain all the information.
+And filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary will contain all the information::
+    ------ 5' primer seen sumary ----
+    Per subread: 157/479 (32.8%)
+    Per ZMW:     73/190 (38.4%)
+    Per ZMW first-pass: 73/190 (38.4%)
+    ------ 3' primer seen sumary ----
+    Per subread: 157/479 (32.8%)
+    Per ZMW:     73/190 (38.4%)
+    Per ZMW first-pass: 73/190 (38.4%)
+    ------ 5'&3' primer seen sumary ----
+    Per subread: 157/479 (32.8%)
+    Per ZMW:     73/190 (38.4%)
+    Per ZMW first-pass: 73/190 (38.4%)
 
 
 
