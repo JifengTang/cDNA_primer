@@ -22,16 +22,16 @@ To get primer info for filtered_subreads.fasta::
 
 You will need to know the 5' and 3' primers used in the cDNA library prep.
 The file format for primers.fa should be:
-
->F0
-5' sequence here
->R0
-3' sequence here (but in reverse complement)
+    >F0
+    *5' sequence here*
+    >R0
+    *3' sequence here (but in reverse complement)*
 
 And if you have more than one set of primers you can add more:
->F1
->R1
-....
+    >F1
+    *....*
+    >R1
+    *....*
 
 
 output/ is the output directory for PacBioBarcodeIDCCS.
