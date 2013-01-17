@@ -63,19 +63,29 @@ And filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary will contain all
 
 ::
     ------ 5' primer seen sumary ----
+
     Per subread: 157/479 (32.8%)
 
     Per ZMW:     73/190 (38.4%)
 
     Per ZMW first-pass: 73/190 (38.4%)
+
     ------ 3' primer seen sumary ----
+
     Per subread: 157/479 (32.8%)
+
     Per ZMW:     73/190 (38.4%)
+
     Per ZMW first-pass: 73/190 (38.4%)
+
     ------ 5'&3' primer seen sumary ----
+
     Per subread: 157/479 (32.8%)
+
     Per ZMW:     73/190 (38.4%)
+
     Per ZMW first-pass: 73/190 (38.4%)
+
 
 
 
