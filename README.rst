@@ -17,7 +17,7 @@ http://www.smrtcommunity.com/Share/Code?id=a1q70000000GsyfAAC&strRecordTypeName=
 
 download and follow directions. It will also ask that you install an old version of HMMER.
 
-For example I run the following command to get primer info for filtered_subreads.fasta::
+To get primer info for filtered_subreads.fasta::
     PacBioBarcodeIDCCS.py filtered_subreads.fasta primers.fa output
 
 You will need to know the 5' and 3' primers used in the cDNA library prep.
@@ -39,16 +39,8 @@ output/ is the output directory for PacBioBarcodeIDCCS.
 In example/ I have put a test set that you can play with. 
 
 
-Commands
-==================
-To get all filtered subreads that did not have CCS::
-    scripts/grab_nonCCS_subreads.py <subreads_filename> <CCS_filename> <output_filename>
-
-For example::
-    scripts/grab_nonCCS_subreads.py filtered_subreads.fasta filtered_CCS_subreads.fasta filtered_nonCCS_subreads.fasta
-
-  
-
+Trimming away primers and polyA tails
+========================================
 To trim & output subreads that have BOTH 5' and 3' primers seen (if there is polyA will remove too)::
     scripts/barcode_trimmer.py -i <input_filename> -d <PBBarcode output directory> -o <output_filename>
 
@@ -74,6 +66,15 @@ You can use .primer_info.txt to get the accurate number of 5', 3', and 5'&3' pri
 
 And filtered_subreads.53seen_trimmed.fa.primer_info.txt.summary will contain all the information.
 
+
+
+Additional scripts that may be useful
+=========================================
+To get all filtered subreads that did not have CCS::
+    scripts/grab_nonCCS_subreads.py <subreads_filename> <CCS_filename> <output_filename>
+
+    For example::
+        scripts/grab_nonCCS_subreads.py filtered_subreads.fasta filtered_CCS_subreads.fasta filtered_nonCCS_subreads.fasta
 
 To sort a fasta file by length::
     scripts/sort_fasta_by_len.py <fasta_filename>
