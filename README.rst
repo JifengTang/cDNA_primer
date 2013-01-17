@@ -29,6 +29,8 @@ The file format for primers.fa should be::
 
 If you have more than one set of primers you can add more, just name them F1,R1,F2,R2...
 
+NOTE: if you have symmetrical 5'/3' primers, there's a chance my script for identifying polyA tail will fail. To prevent that one of the ways you can do is by adding a few As (like 4As or 5As) before the 3' primer sequence. In this way it's more likely that the 3' primer will be identified as the one following the polyA tail.
+
 output/ is the output directory for PacBioBarcodeIDCCS.
 
 In example/ I have put a test set that you can play with. 
