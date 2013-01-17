@@ -27,15 +27,7 @@ The file format for primers.fa should be::
     >R0
     *3' sequence here (but in reverse complement)*
 
-And if you have more than one set of primers you can add more::
-    >F1
-    *5' sequence here*
-    >R1
-    *3' sequence here*
-    >F2
-    *5' sequence here*
-    >R2
-    *3' sequence here*
+If you have more than one set of primers you can add more, just name them F1,R1,F2,R2...
 
 output/ is the output directory for PacBioBarcodeIDCCS.
 
