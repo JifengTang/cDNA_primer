@@ -56,7 +56,7 @@ def polyA_finder(seq, isA, p3_start=None):
             return -1
     
 
-def trim_barcode(fasta_filename, barcode_report, output_filename, see_left, see_right, output_anyway=False):
+def trim_barcode(fasta_filename, barcode_report, output_filename, see_left, see_right, min_seqlen, output_anyway=False, change_seqid=False):
     badmatch, goodmatch = 0, 0
     primer_match_count = defaultdict(lambda: 0) # ex: F1 --> count, F2 --> count   
     barcode_result = {}
@@ -66,8 +66,8 @@ def trim_barcode(fasta_filename, barcode_report, output_filename, see_left, see_
     for r in DictReader(open(barcode_report), delimiter='\t'): 
         right_seen = float(r['scoreAll']) > float(r['scoreRight']) # annotation is WRONG from PBbarcode, scoreRight is actually 5'!!
         left_seen = float(r['scoreRight']) > 0
-        if (not left_seen and see_left) or (not right_seen and see_right):
-            continue
+#        if (not left_seen and see_left) or (not right_seen and see_right):
+#            continue
         if r['fastaid'].endswith('[revcomp]'):
             r['fastaid'] = r['fastaid'][:-10]
             r['revcomp'] = True
@@ -95,27 +95,46 @@ def trim_barcode(fasta_filename, barcode_report, output_filename, see_left, see_
             else:
                 seq = r.seq.tostring()
 
+            try:
+                movie,hn,s_e = r.id.split('/')
+                s, e = map(int, s_e.split('_'))
+            except ValueError:
+                # probably a CCS read
+                # ex: m120426_214207_sherri_c100322600310000001523015009061212_s1_p0/26
+                movie,hn = r.id.split('/')
+                s = 0
+                e = len(seq)
+            
             # look for polyA/T tails
             # since we already did revcomp, must be polyA
             polyA_i = polyA_finder(seq, isA=True, p3_start=d['3end'])
             if polyA_i > 0: # polyA tail seen!
                 seq = seq[:polyA_i]
+                e1 = s + polyA_i if not d['revcomp'] else e - polyA_i
             elif d['3end'] is not None: # unusual to see 3' but not A....
                 seq = seq[:d['3end']]
+                e1 = s + d['3end'] if not d['revcomp'] else e -  d['3end']
             if d['5end'] is not None:
-                seq = seq[d['5end']:]  
-                
-            fout.write(">{0}\n{1}\n".format(r.id, seq))
+                seq = seq[d['5end']:] 
+                s1 = s + d['5end'] if not d['revcomp'] else e - d['5end']
+            # only write if passes criteria
+            if (not see_left or d['5end'] is not None) and (not see_right or d['3end'] is not None) and len(seq) >= min_seqlen:
+                newid = "{0}/{1}/{2}_{3}".format(movie,hn,s1,e1) if change_seqid else r.id
+                fout.write(">{0}\n{1}\n".format(newid, seq))
+            # but write to report regardless!
             freport.write("{id}\t{strand}\t{seen5}\t{seenA}\t{seen3}\t{e5}\t{eA}\t{e3}\n".format(\
                 id=r.id, strand='-' if d['revcomp'] else '+', \
                 seen5='0' if d['5end'] is None else '1',\
                 seenA='0' if polyA_i<0 else '1',\
                 seen3='0' if d['3end'] is None else '1',\
-                e5 = d['5end'], eA = polyA_i, e3 = '-1' if d['3end'] is None else d['3end']))
+                e5 = d['5end'] if d['5end'] is not None else 'NA', eA = polyA_i if polyA_i >= 0 else 'NA', e3 = 'NA' if d['3end'] is None else d['3end']))
         elif output_anyway:
             badmatch += 1
             fout.write(">{0}\n{1}\n".format(r.id, r.seq))
-        else: badmatch += 1
+            freport.write("{id}\tNA\t0\t0\t0\tNA\tNA\tNA\n".format(id=r.id))
+        else:
+            freport.write("{id}\tNA\t0\t0\t0\tNA\tNA\tNA\n".format(id=r.id)) 
+            badmatch += 1
             
     fout.close()
     freport.close()
@@ -137,11 +156,12 @@ if __name__ == "__main__":
     parser.add_argument("--left-nosee-ok", dest="left_nosee_ok", action="store_true", default=False, help="OK if 5' end not detected")
     parser.add_argument("--right-nosee-ok", dest="right_nosee_ok", action="store_true", default=False, help="OK if 3' end not detected")
     parser.add_argument("--output-anyway", dest="output_anyway", action="store_true", default=False, help="Still output seqs w/ no barcode")
-    
+    parser.add_argument("--change-seqid", dest='change_seqid', action="store_true", default=False, help="Change subread id to reflect trimming")
+    parser.add_argument("--min-seqlen", dest="min_seqlen", type=int, default=50, help="Minimum seqlength to output (default 50)")
     args = parser.parse_args()
     
     report_filename = os.path.join(args.barcode_report_dir, "all.RESULT.reduceMax")
     
-    trim_barcode(args.input_fasta, report_filename, args.output_filename, not args.left_nosee_ok, not args.right_nosee_ok, args.output_anyway)
+    trim_barcode(args.input_fasta, report_filename, args.output_filename, not args.left_nosee_ok, not args.right_nosee_ok, args.min_seqlen, args.output_anyway, args.change_seqid)
 
             
