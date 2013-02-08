@@ -16,17 +16,25 @@ ZMW_3seen = {}
 # MUST use the fasta NOT the primer_info.txt to get num of subreads & ZMW
 # because primer_info.txt only lists the ones that have some stuff seen :)
 for r in SeqIO.parse(open(fasta), 'fasta'):
-    zmw = r.id[:r.id.rfind('/')] # <movie>/<holeNumber>
+    if r.id.count('/') == 1: # is CCS!
+        zmw = r.id
+    else:
+        zmw = r.id[:r.id.rfind('/')] # <movie>/<holeNumber>
     num_subread += 1
     if zmw not in ZMW_5seen:
         ZMW_5seen[zmw] = []
         ZMW_3seen[zmw] = []
 
+isCCS = False
 with open(input) as f:
     for r in DictReader(f, delimiter='\t'):
         see5 = r['5seen']=='1'
         see3 = r['3seen']=='1'
-        zmw = r['ID'][:r['ID'].rfind('/')] # use <movie>/<holeNumber>
+        if r['ID'].count('/') == 1:
+            isCCS = True
+            zmw = r['ID']
+        else:
+            zmw = r['ID'][:r['ID'].rfind('/')] # use <movie>/<holeNumber>
         ZMW_5seen[zmw].append(see5)
         ZMW_3seen[zmw].append(see3)
         num_subread_5seen += see5
@@ -34,26 +42,32 @@ with open(input) as f:
         num_subread_53seen += see5 and see3
 
 print "------ 5' primer seen sumary ---- "
-print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_5seen, num_subread, num_subread_5seen*100./num_subread)
+if not isCCS:
+    print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_5seen, num_subread, num_subread_5seen*100./num_subread)
 tmp = sum(any(x) for x in ZMW_5seen.itervalues())
 num_ZMW = len(ZMW_5seen)
 assert num_ZMW == len(ZMW_3seen)
 print "Per ZMW:     {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 tmp = sum((len(x)>0 and x[0]) for x in ZMW_5seen.itervalues())
-print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
+if not isCCS:
+    print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 
 print "------ 3' primer seen sumary ---- "
-print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_3seen, num_subread, num_subread_3seen*100./num_subread)
+if not isCCS:
+    print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_3seen, num_subread, num_subread_3seen*100./num_subread)
 tmp = sum(any(x) for x in ZMW_3seen.itervalues())
 print "Per ZMW:     {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 tmp = sum((len(x)>0 and x[0]) for x in ZMW_3seen.itervalues())
-print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
+if not isCCS:
+    print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 
 print "------ 5'&3' primer seen sumary ---- "
-print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_53seen, num_subread, num_subread_53seen*100./num_subread)
+if not isCCS:
+    print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_53seen, num_subread, num_subread_53seen*100./num_subread)
 tmp = sum([(len(x)>0 and any(x) and len(ZMW_3seen[zmw])>0 and any(ZMW_3seen[zmw])) for (zmw,x) in ZMW_5seen.iteritems()])
 print "Per ZMW:     {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 tmp = sum([(len(x)>0 and x[0] and len(ZMW_3seen[zmw])>0 and ZMW_3seen[zmw][0]) for (zmw,x) in ZMW_5seen.iteritems()])
-print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
+if not isCCS:
+    print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 
 
