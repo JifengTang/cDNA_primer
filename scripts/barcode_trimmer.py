@@ -139,12 +139,6 @@ def trim_barcode(fasta_filename, barcode_report, output_filename, see_left, see_
     fout.close()
     freport.close()
     
-    print("Total number of sequences: {0}".format(badmatch+goodmatch))
-    print("Number of primer matches: {0} ({1:.1f}%)".format(goodmatch, goodmatch*100./(goodmatch+badmatch)))
-    print("Primer matches to:")
-    for k, v in primer_match_count.iteritems():
-        print k, ":", v
-    
     
 if __name__ == "__main__":
     from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
