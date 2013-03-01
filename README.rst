@@ -27,4 +27,22 @@ optional arguments:
 
 
 
-Extra filtering to eliminate subreads with missed adapters.
+===========================================================                    
+Extra filtering to eliminate subreads with missed adapters
+===========================================================
+If SMRTbell adapters are missed, sometimes it'll still be considered full-length by barcode_trimmer.py (especially
+when the 5' and 3' primers are identical or highly similar). To further eliminate these subreads, after running
+barcode_trimmer.py, you can run this extra script:
+
+usage: filter_53seen.py TRIMMED_FASTA PRIMER_INFO OUTPUT_FILENAME
+
+You should use the output fasta and .primer_info.txt from barcode_trimmer.py. 
+
+Currently, this filtering is done by simply looking at the FL subread length distributions in the same ZMW
+and eliminate those that have too short or too long subread length (despite seeing both 5' and 3').
+
+
+The output from this script are all subreads that: (1) have 5' and 3' seen and (2) are likely not to contain a 
+missing adapter.
+
+
