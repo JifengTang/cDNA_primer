@@ -24,3 +24,7 @@ optional arguments:
   --change-seqid        Change subread id to reflect trimming (default: False)
   --min-seqlen MIN_SEQLEN
                         Minimum seqlength to output (default 50) (default: 50)
+
+
+
+Extra filtering to eliminate subreads with missed adapters.
