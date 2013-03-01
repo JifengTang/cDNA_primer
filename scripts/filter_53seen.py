@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, re, sys
 from csv import DictReader
 
