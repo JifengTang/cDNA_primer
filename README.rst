@@ -54,11 +54,7 @@ The alignQC.py is a lot more demanding on prerequisites. Read here_ to usage.
 .. _here: https://github.com/Magdoll/cDNA_primer/wiki/Aligning-to-known-transcripts-for-QC-&-analysis
 
 
-usage: alignQC.py [-h] -d OUTPUT_DIRECTORY -m PRIMER_MATCH_FILE -p
-                  OUTPUT_PREFIX [--read_pickle READ_PICKLE]
-                  [--ref_size REF_SIZE] [--refStrandPickle REFSTRANDPICKLE]
-                  [--restrictByPM]
-                  job_directory
+usage: alignQC.py [-h] -d OUTPUT_DIRECTORY -m PRIMER_MATCH_FILE -p OUTPUT_PREFIX [--read_pickle READ_PICKLE] [--ref_size REF_SIZE] [--refStrandPickle REFSTRANDPICKLE] [--restrictByPM] job_directory
 
 Create some plots for transcript analyses.
 
@@ -67,9 +63,9 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -d OUTPUT_DIRECTORY, --output_directory OUTPUT_DIRECTORY
-  -m PRIMER_MATCH_FILE, --primer_match_file PRIMER_MATCH_FILE
-  -p OUTPUT_PREFIX, --output_prefix OUTPUT_PREFIX
+  -d OUTPUT_DIRECTORY   OUTPUT_DIRECTORY
+  -m PRIMER_MATCH_FILE  PRIMER_MATCH_FILE
+  -p OUTPUT_PREFIX      OUTPUT_PREFIX
   --read_pickle READ_PICKLE
   --ref_size REF_SIZE
   --refStrandPickle REFSTRANDPICKLE
