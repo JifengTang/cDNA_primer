@@ -55,24 +55,24 @@ The alignQC.py is a lot more demanding on prerequisites. Read here_ to usage.
 
 
 usage: alignQC.py [-h] -d OUTPUT_DIRECTORY -m PRIMER_MATCH_FILE -p
-    OUTPUT_PREFIX [--read_pickle READ_PICKLE]
-    [--ref_size REF_SIZE] [--refStrandPickle REFSTRANDPICKLE]
-    [--restrictByPM]
-    job_directory
+                  OUTPUT_PREFIX [--read_pickle READ_PICKLE]
+                  [--ref_size REF_SIZE] [--refStrandPickle REFSTRANDPICKLE]
+                  [--restrictByPM]
+                  job_directory
 
 Create some plots for transcript analyses.
 
 positional arguments:
-    job_directory
+  job_directory
 
 optional arguments:
-    -h, --help            show this help message and exit
-    -d OUTPUT_DIRECTORY, --output_directory OUTPUT_DIRECTORY
-    -m PRIMER_MATCH_FILE, --primer_match_file PRIMER_MATCH_FILE
-    -p OUTPUT_PREFIX, --output_prefix OUTPUT_PREFIX
-    --read_pickle READ_PICKLE
-    --ref_size REF_SIZE
-    --refStrandPickle REFSTRANDPICKLE
-    --restrictByPM
+  -h, --help            show this help message and exit
+  -d OUTPUT_DIRECTORY, --output_directory OUTPUT_DIRECTORY
+  -m PRIMER_MATCH_FILE, --primer_match_file PRIMER_MATCH_FILE
+  -p OUTPUT_PREFIX, --output_prefix OUTPUT_PREFIX
+  --read_pickle READ_PICKLE
+  --ref_size REF_SIZE
+  --refStrandPickle REFSTRANDPICKLE
+  --restrictByPM
 
 
