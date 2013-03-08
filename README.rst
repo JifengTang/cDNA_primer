@@ -69,6 +69,6 @@ optional arguments:
   --read_pickle         READ_PICKLE
   --ref_size            REF_SIZE
   --refStrandPickle     REFSTRANDPICKLE
-  --restrictByPM
+  --restrictByPM        Using .primer_info.txt to restrict what subreads to look at
 
 
