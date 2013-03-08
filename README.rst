@@ -9,9 +9,9 @@ The entire wiki_ section contains detailed tutorials to all the scripts provided
 Identifying full-length subreads using cDNA kit primers
 ===========================================================
 
-Refer here_ for detailed explanation on how to use the full-length identification scripts.
+See this page_ detailed explanation on how to use the full-length identification scripts.
 
-.. _here: https://github.com/Magdoll/cDNA_primer/wiki/How-to-identify-full-length-transcripts-in-PacBio-data
+.. _page: https://github.com/Magdoll/cDNA_primer/wiki/How-to-identify-full-length-transcripts-in-PacBio-data
 
 
 
