@@ -66,9 +66,9 @@ optional arguments:
   -d OUTPUT_DIRECTORY   OUTPUT_DIRECTORY
   -m PRIMER_MATCH_FILE  PRIMER_MATCH_FILE
   -p OUTPUT_PREFIX      OUTPUT_PREFIX
-  --read_pickle READ_PICKLE
-  --ref_size REF_SIZE
-  --refStrandPickle REFSTRANDPICKLE
+  --read_pickle         READ_PICKLE
+  --ref_size            REF_SIZE
+  --refStrandPickle     REFSTRANDPICKLE
   --restrictByPM
 
 
