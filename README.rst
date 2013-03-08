@@ -46,3 +46,7 @@ The output from this script are all subreads that: (1) have 5' and 3' seen and (
 missing adapter.
 
 
+===========================================================
+Aligning subreads to known transcripts and plotting results
+===========================================================
+
