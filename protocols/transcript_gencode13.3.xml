@@ -118,6 +118,9 @@ BLASR maps reads to genomes by finding the highest scoring local alignment or se
             <param name="loadPulses" hidden="true">
                 <value>False</value>
             </param>
+            <param name="covGFF" hidden="true">
+                <value>False</value>
+            </param>
         </module>
     </moduleStage>
     <fileName>transcript_gencodev13.1.xml</fileName>
