@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<smrtpipeSettings>
+    <protocol version="1.4.0" id="transcript_gencodev13" editable="true">
+        <param name="name" label="Protocol Name">
+            <value>transcript_gencodev13</value>
+            <input type="text"/>
+            <rule required="true"/>
+        </param>
+        <param name="description">
+            <value>A general-purpose analysis workflow for whole-genome or targeted resequencing. Reads are passed through a filtering stage, mapped to a provided reference sequence, and consensus and variants are identified versus this reference.
+      </value>
+            <textarea></textarea>
+        </param>
+        <param name="version" hidden="true">
+            <value>1</value>
+            <input type="text"/>
+            <rule type="digits" required="true" min="1.0"/>
+        </param>
+        <param name="state">
+            <value>active</value>
+            <input value="active" type="radio"/>
+            <input value="inactive" type="radio"/>
+        </param>
+        <param name="reference" hidden="true">
+            <value>common/references/Gencodev13</value>
+        </param>
+        <param name="control" hidden="true">
+            <value></value>
+        </param>
+        <param name="fetch" hidden="true">
+            <value>common/protocols/preprocessing/Fetch.1.xml</value>
+        </param>
+        <param name="filtering">
+            <value>common/protocols/filtering/SFilter.1.xml</value>
+            <select multiple="true">
+                <import extension="xml" contentType="text/directory">common/protocols/filtering</import>
+            </select>
+        </param>
+        <param name="mapping">
+            <value>common/protocols/mapping/BLASR_transcript.1.xml</value>
+            <select multiple="true">
+                <import extension="xml" contentType="text/directory">common/protocols/mapping</import>
+            </select>
+        </param>
+    </protocol>
+    <moduleStage name="fetch" editable="true">
+        <module label="Fetch v1" id="P_Fetch" editableInJob="true">
+            <description>Sets up inputs</description>
+        </module>
+    </moduleStage>
+    <moduleStage name="filtering" editable="true">
+        <module label="SFilter v1" id="P_Filter" editableInJob="true">
+            <description>This module filters reads based on the minimum readlength and read quality you specify.</description>
+            <param name="minLength" label="Minimum Readlength">
+                <title>The minimum readlength. Shorter reads will be filtered and excluded from further analysis.</title>
+                <value>50</value>
+                <input type="text" size="3"/>
+                <rule type="number" min="0.0" message="Value must be a positive integer"/>
+            </param>
+            <param name="minSubReadLength" label="Minimum Subreadlength">
+                <title>The minimum subreadlength. Shorter subreads will be filtered and excluded from further analysis.</title>
+                <value>50</value>
+                <input type="text" size="3"/>
+                <rule type="number" min="0.0" message="Value must be a positive integer"/>
+            </param>
+            <param name="readScore" label="Minimum Read Quality">
+                <title>The minimum read quality determines the quality cutoff. Reads with lower quality will be filtered and excluded from further analysis.</title>
+                <value>0.75</value>
+                <input type="text" size="3"/>
+                <rule type="number" min="0.0" message="Value must be between 0 and 1" max="1.0"/>
+            </param>
+        </module>
+        <module label="SFilter Reports v1" id="P_FilterReports" editableInJob="false"/>
+    </moduleStage>
+    <moduleStage name="mapping" editable="true">
+        <module label="BLASR v1" id="P_Mapping" editableInJob="true">
+            <description>
+BLASR maps reads to genomes by finding the highest scoring local alignment or set of local alignments between the read and the genome. The first set of alignments is found by querying an index of the reference genome, and then refining until only high scoring alignments are retained.  Additional pulse metrics are loaded into the resulting cmp.h5 file to enable downstream use of the Quiver algorithm.
+    </description>
+            <param name="maxHits" label="Maximum number of hits per read">
+                <title>
+        The maximum number of matches of each read to the reference
+        sequence that will be evaluated. maxHits should be greater
+        than the expected number of repeats if you want to spread hits
+        out on the genome.
+      </title>
+                <value>10</value>
+                <input type="text"/>
+                <rule type="digits" message="Value must be an integer between 0 and 1000"/>
+            </param>
+            <param name="maxDivergence" label="Maximum divergence (%)">
+                <title>The maximum allowed divergence of a read from the reference sequence.</title>
+                <value>30</value>
+                <input type="text"/>
+                <rule type="digits" message="Value must be an integer between 0 and 100"/>
+            </param>
+            <param name="minAnchorSize" label="Minimum anchor size">
+                <title>The minimum anchor size defines the length of the read that must match against the reference sequence.</title>
+                <value>12</value>
+                <input type="text"/>
+                <rule type="digits" message="Value must be an integer between 8 and 30"/>
+            </param>
+            <param name="samBam" label="Write output as a BAM file">
+                <value>false</value>
+                <input type="checkbox"/>
+            </param>
+            <param name="gff2Bed" label="Write BED coverage file">
+                <value>false</value>
+                <input type="checkbox"/>
+            </param>
+            <param name="placeRepeatsRandomly" label="Place repeats randomly">
+                <value>false</value>
+                <input type="checkbox"/>
+            </param>
+            <param name="align_opts" hidden="true">
+                <value>--minAccuracy=0.75 --minLength=50 --useQuality --multiple=all</value>
+            </param>
+            <param name="loadPulses" hidden="true">
+                <value>False</value>
+            </param>
+        </module>
+    </moduleStage>
+    <fileName>transcript_gencodev13.1.xml</fileName>
+</smrtpipeSettings>
