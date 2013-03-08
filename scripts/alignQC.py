@@ -283,7 +283,7 @@ def getAlignedLengthRatios(cmph5, inserts):
 def makeFractionSubreadHistogram(alnRatios, outfile, format):
     fig = plt.figure(dpi=300, figsize=(10, 6))
     ax = fig.add_subplot(111)
-    ax.set_title("Fraction of Subread in Alignment Histogram")
+    ax.set_title("Fraction of Subread in Alignment (qCov)")
 
     fullPass = alnRatios[alnRatios['IsFullPass']]
     AT = alnRatios[alnRatios['IsAT']]
@@ -304,7 +304,7 @@ def makeFractionSubreadHistogram(alnRatios, outfile, format):
         #ax.hist(alnSubRatio, bins=50, histtype='step', label=label)
 
     ax.legend(loc='upper left')
-    ax.set_xlabel("Alignment length/Subread Length ratio")
+    ax.set_xlabel("Subread aligned length/Subread length ratio")
     ax.set_ylabel("Count")
     fig.savefig(outfile, format=format)
 
@@ -366,14 +366,16 @@ def makeFractionReferenceHistogram(alnRatios, outfile, format):
     ax.set_ylabel("Count")
     fig.savefig(outfile, format=format)
 
-def makeReferenceRLHistogram(alnRatios, refLengths, outfile, format):
+def makeReferenceRLHistogram(alnRatios, refLengths, outfile, format, quantile):
     fig = plt.figure(dpi=300, figsize=(10, 6))
     ax = fig.add_subplot(111)
-    ax.set_title("Aligned Reference Length Fraction Plot (qCov>=80%)")
+    ax.set_title("Aligned Reference Length Distribution (qCov>=80%)")
 
     fullPass = alnRatios[alnRatios['IsFullPass']]
     AT = alnRatios[alnRatios['IsAT']]
     
+    if quantile is not None:
+        refLengths = refLengths[refLengths < mstats.mquantiles(refLengths, [quantile])[0]]
     # plot all references first
     bins = 50
     y,binEdges = n.histogram(refLengths, bins=bins)
@@ -395,6 +397,9 @@ def makeReferenceRLHistogram(alnRatios, refLengths, outfile, format):
                     break
         if len(alnRefLength) == 0:
             continue
+        alnRefLength = n.array(alnRefLength)
+        if quantile is not None:
+            alnRefLength = alnRefLength[alnRefLength < mstats.mquantiles(alnRefLength, [quantile])[0]]
         bins = 50
         y,binEdges = n.histogram(alnRefLength, bins=bins)
         bincenters = 0.5*(binEdges[1:]+binEdges[:-1])
@@ -1023,7 +1028,7 @@ if __name__ == "__main__":
     print  >> sys.stderr, "Creating pdf plots"
     makeSubreadRLHistogram(alnRatios, pp, "pdf", 0.99)       
     makeFractionSubreadHistogram(alnRatios, pp, "pdf")
-    makeReferenceRLHistogram(alnRatios, refLengths, pp, "pdf")
+    makeReferenceRLHistogram(alnRatios, refLengths, pp, "pdf", .99)
     #makeAlignmentPercentileDistribution(alnRatios, pp, "pdf", refStrandDict=refStrandDict)
     makeAlignmentPercentileDistribution(alnRatios, pp, "pdf", refLengthRange=ref_size, refStrandDict=refStrandDict)
     makeAlignmentPercentileDistribution(alnRatios, pp, "pdf", "IsAT", SeenName, refLengthRange=ref_size, refStrandDict=refStrandDict)
