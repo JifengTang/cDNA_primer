@@ -51,7 +51,7 @@ Aligning subreads to known transcripts and plotting results
 ===========================================================
 The alignQC.py is a lot more demanding on prerequisites. Read here_ to usage.
 
-.. _here: https://github.com/Magdoll/cDNA_primer/wiki/Aligning-to-known-transcripts-for-QC-&-analysis
+.. _here: https://github.com/Magdoll/cDNA_primer/wiki/Aligning-to-known-transcripts-for-QC
 
 
 usage: alignQC.py [-h] -d OUTPUT_DIRECTORY -m PRIMER_MATCH_FILE -p OUTPUT_PREFIX [--read_pickle READ_PICKLE] [--ref_size REF_SIZE] [--refStrandPickle REFSTRANDPICKLE] [--restrictByPM] job_directory
