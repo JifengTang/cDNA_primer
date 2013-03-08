@@ -49,7 +49,7 @@ missing adapter.
 ===========================================================
 Aligning subreads to known transcripts and plotting results
 ===========================================================
-The alignQC.py is a lot more demanding on prerequisites. Read here_ to usage.
+The alignQC.py is a lot more demanding on prerequisites. Read here_ for a detailed tutorial.
 
 .. _here: https://github.com/Magdoll/cDNA_primer/wiki/Aligning-to-known-transcripts-for-QC
 
