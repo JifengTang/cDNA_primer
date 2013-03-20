@@ -1,15 +1,15 @@
 These scripts are for identifying potential full-length (FL) subreads or CCS reads using the 5' and 3' primer ligated to the transcripts during the cDNA library preparation step.
 
-The entire wiki_ section contains detailed tutorials to all the scripts provided.
+IMPORTANT: usage of the scripts is detailed in the wiki_ section. Please read it!
 
 .. _wiki: https://github.com/Magdoll/cDNA_primer/wiki
 
 
-===========================================================                    
-Identifying full-length subreads using cDNA kit primers
-===========================================================
+======================================================================                    
+Identifying full-length subreads/CCS reads using cDNA kit primers
+======================================================================
 
-See this page_ detailed explanation on how to use the full-length identification scripts.
+See this page_ on how to use the full-length identification scripts. 
 
 .. _page: https://github.com/Magdoll/cDNA_primer/wiki/How-to-identify-full-length-transcripts-in-PacBio-data
 
@@ -39,6 +39,7 @@ optional arguments:
 ===========================================================                    
 Extra filtering to eliminate subreads with missed adapters
 ===========================================================
+
 If SMRTbell adapters are missed, sometimes it'll still be considered full-length by barcode_trimmer.py (especially
 when the 5' and 3' primers are identical or highly similar). To further eliminate these subreads, after running
 barcode_trimmer.py, you can run this extra script:
