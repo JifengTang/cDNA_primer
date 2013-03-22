@@ -1,6 +1,6 @@
 These scripts are for identifying potential full-length (FL) subreads or CCS reads using the 5' and 3' primer ligated to the transcripts during the cDNA library preparation step.
 
-IMPORTANT: usage of the scripts is detailed in the wiki_ section. Please read it!
+IMPORTANT: usage of the scripts is detailed in the wiki_ section. Please read it!!
 
 .. _wiki: https://github.com/Magdoll/cDNA_primer/wiki
 
