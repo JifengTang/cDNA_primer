@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 import os, sys
+import argparse
 from csv import DictReader
 from Bio import SeqIO
 
-input = sys.argv[1] # should be primer_info.txt
-fasta = sys.argv[2] # should be filtered_subreads.fasta or the sort
+parser = argparse.ArgumentParser()
+parser.add_argument("primer_info_filename", help=".primer_info.txt filename")
+
+args = parser.parse_args()
+
+input = args.primer_info_filename # should be primer_info.txt
 
 # (1) count by subreads
 # (2) count by ZMW
@@ -12,18 +17,6 @@ fasta = sys.argv[2] # should be filtered_subreads.fasta or the sort
 num_subread, num_subread_5seen, num_subread_3seen, num_subread_53seen = 0, 0, 0, 0
 ZMW_5seen = {} # zmw --> list of [True, False, False]....where i-th is i-th subread
 ZMW_3seen = {}
-
-# MUST use the fasta NOT the primer_info.txt to get num of subreads & ZMW
-# because primer_info.txt only lists the ones that have some stuff seen :)
-for r in SeqIO.parse(open(fasta), 'fasta'):
-    if r.id.count('/') == 1: # is CCS!
-        zmw = r.id
-    else:
-        zmw = r.id[:r.id.rfind('/')] # <movie>/<holeNumber>
-    num_subread += 1
-    if zmw not in ZMW_5seen:
-        ZMW_5seen[zmw] = []
-        ZMW_3seen[zmw] = []
 
 isCCS = False
 with open(input) as f:
@@ -35,8 +28,12 @@ with open(input) as f:
             zmw = r['ID']
         else:
             zmw = r['ID'][:r['ID'].rfind('/')] # use <movie>/<holeNumber>
+        if zmw not in ZMW_5seen:
+            ZMW_5seen[zmw] = []
+            ZMW_3seen[zmw] = []
         ZMW_5seen[zmw].append(see5)
         ZMW_3seen[zmw].append(see3)
+        num_subread += 1
         num_subread_5seen += see5
         num_subread_3seen += see3
         num_subread_53seen += see5 and see3

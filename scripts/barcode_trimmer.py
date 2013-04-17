@@ -1,1 +1,0 @@
-/home/UNIXHOME/etseng/GitHub/PB_Ttome/barcode_trimmer.py
