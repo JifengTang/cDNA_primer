@@ -14,25 +14,43 @@ See this page_ on how to use the full-length identification scripts.
 .. _page: https://github.com/Magdoll/cDNA_primer/wiki/How-to-identify-full-length-transcripts-in-PacBio-data
 
 
+usage: Identify putative full-length subreads/CCS reads using 5'/3' primers
+       [-h] [-p PRIMER_FILENAME] [-i INPUT_FILENAME] [-d DIRECTORY]
+       [-k PRIMER_SEARCH_WINDOW] [--cpus CPUS] [--left-nosee-ok]
+       [--right-nosee-ok] [--output-anyway] [--change-seqid]
+       [--min-seqlen MIN_SEQLEN] [--min-score MIN_SCORE] -o OUTPUT_FILENAME
 
-usage: barcode_trimmer.py [-h] -i INPUT_FASTA -d BARCODE_REPORT_DIR -o
-                          OUTPUT_FILENAME [--left-nosee-ok] [--right-nosee-ok]
-                          [--output-anyway] [--change-seqid]
-                          [--min-seqlen MIN_SEQLEN]
-
-Trim barcode
+ This script requires phmmer from HMMER 3.0.
+ If the output directory already exists, will skip running phmmer and directory go to primer trimming.
+ If you want to re-run HMMER you must first delete the output directory manually.
+ Refer to wiki: https://github.com/PacificBiosciences/cDNA_primer/wiki for more details.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i INPUT_FASTA        Input fasta filename (default: None)
-  -d BARCODE_REPORT_DIR       Barcode report directory (default: None)
-  -o OUTPUT_FILENAME    Output filename (default: None)
-  --left-nosee-ok       OK if 5' end not detected (default: False)
-  --right-nosee-ok      OK if 3' end not detected (default: False)
-  --output-anyway       Still output seqs w/ no barcode (default: False)
-  --change-seqid        Change subread id to reflect trimming (default: False)
+
+HMMER options:
+  -p PRIMER_FILENAME, --primer_filename PRIMER_FILENAME
+                        Primer fasta file
+  -i INPUT_FILENAME, --input_filename INPUT_FILENAME
+                        Input fasta file (usually filtered_subreads.fasta or filtered_CCS_subreads.fasta)
+  -d DIRECTORY, --directory DIRECTORY
+                        Directory to store HMMER output (default: output/)
+  -k PRIMER_SEARCH_WINDOW, --primer_search_window PRIMER_SEARCH_WINDOW
+                        Search in the first/last k-bp for primers. Must be longer than the longest primer. (default: 100)
+  --cpus CPUS           Number of CPUs to run HMMER (default: 8)
+
+Primer trimming options:
+  --left-nosee-ok       OK if 5' end not detected (default: off)
+  --right-nosee-ok      OK if 3' end not detected (default: off)
+  --output-anyway       Still output seqs w/ no primer (default: off)
+  --change-seqid        Change seq id to reflect trimming (default: off)
   --min-seqlen MIN_SEQLEN
-                        Minimum seqlength to output (default 50) (default: 50)
+                        Minimum seqlength to output (default: 50)
+  --min-score MIN_SCORE
+                        Minimum bit score for primer hit (default: 10)
+  -o OUTPUT_FILENAME, --output_filename OUTPUT_FILENAME
+                        Output fasta filename
+
 
 
 

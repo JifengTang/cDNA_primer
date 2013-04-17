@@ -1,12 +1,12 @@
 ------ 5' primer seen sumary ---- 
-Per subread: 157/479 (32.8%)
-Per ZMW:     73/190 (38.4%)
-Per ZMW first-pass: 73/190 (38.4%)
+Per subread: 170/479 (35.5%)
+Per ZMW:     76/190 (40.0%)
+Per ZMW first-pass: 17/190 (8.9%)
 ------ 3' primer seen sumary ---- 
-Per subread: 157/479 (32.8%)
-Per ZMW:     73/190 (38.4%)
-Per ZMW first-pass: 73/190 (38.4%)
+Per subread: 339/479 (70.8%)
+Per ZMW:     124/190 (65.3%)
+Per ZMW first-pass: 97/190 (51.1%)
 ------ 5'&3' primer seen sumary ---- 
-Per subread: 157/479 (32.8%)
-Per ZMW:     73/190 (38.4%)
-Per ZMW first-pass: 73/190 (38.4%)
+Per subread: 130/479 (27.1%)
+Per ZMW:     70/190 (36.8%)
+Per ZMW first-pass: 4/190 (2.1%)
