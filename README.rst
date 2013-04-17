@@ -14,7 +14,7 @@ See this page_ on how to use the full-length identification scripts.
 .. _page: https://github.com/Magdoll/cDNA_primer/wiki/How-to-identify-full-length-transcripts-in-PacBio-data
 
 
-usage: Identify putative full-length subreads/CCS reads using 5'/3' primers
+usage: hmmer_wrapper.py
        [-h] [-p PRIMER_FILENAME] [-i INPUT_FILENAME] [-d DIRECTORY]
        [-k PRIMER_SEARCH_WINDOW] [--cpus CPUS] [--left-nosee-ok]
        [--right-nosee-ok] [--output-anyway] [--change-seqid]
