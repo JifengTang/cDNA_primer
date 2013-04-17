@@ -265,7 +265,7 @@ def main(output_dir, primer_filename, fasta_filename, output_filename, k, cpus, 
         os.makedirs(output_dir)
 
         print >> sys.stderr, "checking and copying primer file", primer_filename
-        p_filename = os.path.join(output_dir, primer_filename)
+        p_filename = os.path.join(output_dir, os.path.basename(primer_filename))
         p_indices = sanity_check_primers(primer_filename, k, p_filename)
 
         print >> sys.stderr, "extracting first and last {0} bases from {1}".format(k, fasta_filename)
