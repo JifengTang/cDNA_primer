@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <smrtpipeSettings>
-    <protocol version="1.4.0" id="transcript_gencodev13" editable="true">
+    <protocol version="1.4.0" id="transcript_gencode15" editable="true">
         <param name="name" label="Protocol Name">
-            <value>transcript_gencodev13</value>
+            <value>transcript_gencode15</value>
             <input type="text"/>
             <rule required="true"/>
         </param>
@@ -22,7 +22,7 @@
             <input value="inactive" type="radio"/>
         </param>
         <param name="reference" hidden="true">
-            <value>common/references/Gencodev13</value>
+            <value>common/references/Gencode15</value>
         </param>
         <param name="control" hidden="true">
             <value></value>
@@ -116,12 +116,12 @@ BLASR maps reads to genomes by finding the highest scoring local alignment or se
                 <value>--minAccuracy=0.75 --minLength=50 --useQuality --multiple=all</value>
             </param>
             <param name="loadPulses" hidden="true">
-                <value>False</value>
+                <value>false</value>
             </param>
             <param name="covGFF" hidden="true">
-                <value>False</value>
+                <value>false</value>
             </param>
         </module>
     </moduleStage>
-    <fileName>transcript_gencodev13.1.xml</fileName>
+    <fileName>transcript_gencode15.1.xml</fileName>
 </smrtpipeSettings>
