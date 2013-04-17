@@ -1,4 +1,5 @@
 import os, sys
+import argparse
 from Bio import SeqIO
 
 def main(fasta_filename):
@@ -25,5 +26,9 @@ def main(fasta_filename):
     print >> sys.stderr, "Nonredundant output written to", f.name
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    parser = argparse.ArgumentParser("Pre-processing for reference fasta files before importing to SMRTportal")
+    parser.add_argument("fasta_filename")
+    
+    args = parser.parse_args()
+    main(args.fasta_filename)
 
