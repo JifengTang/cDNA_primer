@@ -270,6 +270,7 @@ def makeFractionSubreadHistogram(alnRatios, outfile, format):
     fullPass = alnRatios[alnRatios['IsFullPass']]
     fullLength = alnRatios[alnRatios['IsFullLength']]
 
+    max_y = 0
     for l, label in zip((alnRatios, fullPass, fullLength), ("Aligned Subreads", "Aligned full-pass subreads", "Aligned " + SeenName + " subreads")):
         data = l['rCov']
         # smooth out the curve
@@ -278,9 +279,11 @@ def makeFractionSubreadHistogram(alnRatios, outfile, format):
         bincenters = 0.5*(binEdges[1:]+binEdges[:-1])
         xnew = n.linspace(bincenters.min(), bincenters.max(), 300)
         ysmooth = spline(bincenters, y, xnew)
+        max_y = max(max_y, max(ysmooth))
         ax.plot(xnew, ysmooth, '-', label=label)
         #ax.hist(alnSubRatio, bins=50, histtype='step', label=label)
 
+    ax.set_ylim(0, max_y * 1.1)
     ax.legend(loc='upper left')
     ax.set_xlabel("Subread aligned length/Subread length ratio")
     ax.set_ylabel("Count")
@@ -698,7 +701,7 @@ def _fn(dir, pref, plot_type, suf):
     return os.path.join(dir, pref + "_" + plot_type + suf)
 
  
-def write_summary_page(pdf_filename, args, inserts, alnRatios, zmw_per_chip=75000):
+def write_summary_page(pdf_filename, args, inserts, alnRatios, zmw_per_chip):
     """
     Summary page should contain:
     
@@ -855,6 +858,7 @@ if __name__ == "__main__":
     parser.add_argument('-d', '--output_directory', required=True)
     parser.add_argument("-m", '--primer_match_file', required=True)
     parser.add_argument('-p', '--output_prefix', required=True)
+    parser.add_argument("--zmw_per_chip", default=75000, help="Number of ZMWs per chip (def: 75000)")
     parser.add_argument('--read_pickle')
     parser.add_argument("--ref_size", default=None)
     parser.add_argument("--restrictByPM", default=False,  action="store_true", help=argparse.SUPPRESS) # ToDo: validate this before opening up the option
@@ -925,7 +929,7 @@ if __name__ == "__main__":
         with open(os.path.join(args.output_directory, args.output_prefix + ".pkl"), 'wb') as f:
             cPickle.dump({'inserts':inserts, 'alns':alnRatios, 'MovieDict':movieDict, 'RefDict':refDict, 'refLengths': refLengths}, f)
 
-    write_summary_page(os.path.join(args.output_directory, args.output_prefix + '.summary.pdf'), args, inserts, alnRatios)
+    write_summary_page(os.path.join(args.output_directory, args.output_prefix + '.summary.pdf'), args, inserts, alnRatios, args.zmw_per_chip)
 
     pp = PdfPages(os.path.join(args.output_directory, args.output_prefix + ".figures.pdf"))
     print  >> sys.stderr, "Creating pdf plots"
