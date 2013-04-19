@@ -186,9 +186,16 @@ def getInsertsFromFofn(inputFOFN, primer_match_filename, filtered_subreads_fasta
         for line in f:
             filename = line.strip()
             print >> sys.stderr, "Reading", filename
-            movieName = sub('.pls.h5|.bas.h5', '', os.path.basename(filename))
-            inserts[movieName] = getInsertsFromBasH5(filename, functools.partial(hasPolyAT, primer_match_dict, movieName),\
-                                                     functools.partial(func_is_in_filtered, movieName))
+            b = os.path.basename(filename)
+            if b.endswith('.pls.h5') or b.endswith('.bas.h5'): movieName = b[:-7]
+            elif b.endswith('.bax.h5'): 
+                b = b[:-7]
+                movieName = b[:b.rfind('.')]
+            data = getInsertsFromBasH5(filename, functools.partial(hasPolyAT, primer_match_dict, movieName), functools.partial(func_is_in_filtered, movieName))
+            if movieName in inserts: # for .bax.h5 case
+                inserts[movieName] = n.append(inserts[movieName], data)
+            else:
+                inserts[movieName] = data
 
     return inserts
 
