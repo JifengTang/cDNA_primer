@@ -77,7 +77,9 @@ class SAMRecord:
         for num,type in SAMRecord.cigar_rex.findall(cigar):
             _strlen += len(num) + len(type)
             num = int(num)
-            if type == 'S':
+            if type == 'H':
+                self.qLen += num            
+            elif type == 'S':
                 if not S_seen_already:
                     self.qStart = num
                     S_seen_already = True
