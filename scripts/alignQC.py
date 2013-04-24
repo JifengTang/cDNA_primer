@@ -109,14 +109,13 @@ def getInsertsFromBasH5(bash5FN, func_53seen, func_is_in_filtered):
     NOTE: IsFullLength is actually set according to 5seen & 3seen. Check function definition!!
     """
     bash5 = BasH5Reader(bash5FN)
-    rgnTable = bash5.regionTable
     data = []
     
     for hn in bash5.sequencingZmws:
         adapter_positions = []
         inserts = []
         hqStart, hqEnd = None, None
-        for x in rgnTable[rgnTable['holeNumber']==hn]:
+        for x in bash5[hn].regionTable:
             if x['regionType'] == 0: # adapter
                 adapter_positions.append(x['regionStart'])
                 adapter_positions.append(x['regionEnd'])
@@ -129,7 +128,7 @@ def getInsertsFromBasH5(bash5FN, func_53seen, func_is_in_filtered):
         if hqStart == hqEnd: # HQ region is blank, nothing to do
             continue
         
-        subread_ses = [(x.readStart, x.readEnd) for x in bash5[hn].subreads()]
+        subread_ses = [(x.readStart, x.readEnd) for x in bash5[hn].subreads]
         
         for s, e in inserts:
             if e <= hqStart or s >= hqEnd: # beyond HQ region, ignore
