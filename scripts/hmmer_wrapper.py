@@ -167,7 +167,7 @@ def pick_best_primer_combo(d_front, d_back, primer_indices, min_score):
 def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k, see_left, see_right, min_seqlen, min_score, output_anyway=False, change_seqid=False):
     fout = open(output_filename, 'w')
     freport = open(output_filename + '.primer_info.txt', 'w')
-    freport.write("ID\tstrand\t5seen\tpolyAseen\t3seen\t5end\tpolyAend\t3end\n")
+    freport.write("ID\tstrand\t5seen\tpolyAseen\t3seen\t5end\tpolyAend\t3end\tprimer\n")
 
     for r in SeqIO.parse(open(fasta_filename), 'fasta'):
         ind, strand, fw, rc = pick_best_primer_combo(d_fw[r.id], d_rc[r.id], primer_indices, min_score)
@@ -223,14 +223,15 @@ def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k,
             if ((not see_left or p5_end is not None) and (not see_right or p3_start is not None) and len(seq) >= min_seqlen) or output_anyway:
                 fout.write(">{0}\n{1}\n".format(newid, seq))
             # but write to report regardless!
-            freport.write("{id}\t{strand}\t{seen5}\t{seenA}\t{seen3}\t{e5}\t{eA}\t{e3}\n".format(\
+            freport.write("{id}\t{strand}\t{seen5}\t{seenA}\t{seen3}\t{e5}\t{eA}\t{e3}\t{pm}\n".format(\
                 id=newid, strand=strand,\
                 seen5='0' if p5_start is None else '1',\
                 seenA='0' if polyA_i<0 else '1',\
                 seen3='0' if p3_start is None else '1',\
                 e5 = p5_end if p5_end is not None else 'NA', \
                 eA = polyA_i if polyA_i >= 0 else 'NA', \
-                e3 = 'NA' if p3_start is None else p3_start))
+                e3 = 'NA' if p3_start is None else p3_start,\
+                pm=ind))
 
     fout.close()
     freport.close()

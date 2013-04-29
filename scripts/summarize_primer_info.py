@@ -3,6 +3,7 @@ import os, sys
 import argparse
 from csv import DictReader
 from Bio import SeqIO
+from collections import defaultdict
 
 parser = argparse.ArgumentParser()
 parser.add_argument("primer_info_filename", help=".primer_info.txt filename")
@@ -17,12 +18,15 @@ input = args.primer_info_filename # should be primer_info.txt
 num_subread, num_subread_5seen, num_subread_3seen, num_subread_53seen = 0, 0, 0, 0
 ZMW_5seen = {} # zmw --> list of [True, False, False]....where i-th is i-th subread
 ZMW_3seen = {}
+pm_count = defaultdict(lambda: 0)
 
 isCCS = False
 with open(input) as f:
     for r in DictReader(f, delimiter='\t'):
         see5 = r['5seen']=='1'
         see3 = r['3seen']=='1'
+        if r['primer'] is not None:
+            pm_count[r['primer']] += 1
         if r['ID'].count('/') == 1:
             isCCS = True
             zmw = r['ID']
@@ -61,10 +65,21 @@ if not isCCS:
 print "------ 5'&3' primer seen sumary ---- "
 if not isCCS:
     print "Per subread: {0}/{1} ({2:.1f}%)".format(num_subread_53seen, num_subread, num_subread_53seen*100./num_subread)
-tmp = sum([(len(x)>0 and any(x) and len(ZMW_3seen[zmw])>0 and any(ZMW_3seen[zmw])) for (zmw,x) in ZMW_5seen.iteritems()])
+tmp = 0
+for zmw,x in  ZMW_5seen.iteritems():
+    for i in xrange(len(x)):
+        if x[i] and ZMW_3seen[zmw][i]:
+            tmp += 1
+            break
 print "Per ZMW:     {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 tmp = sum([(len(x)>0 and x[0] and len(ZMW_3seen[zmw])>0 and ZMW_3seen[zmw][0]) for (zmw,x) in ZMW_5seen.iteritems()])
 if not isCCS:
     print "Per ZMW first-pass: {0}/{1} ({2:.1f}%)".format(tmp, num_ZMW, tmp*100./num_ZMW)
 
 
+print "------ Primer Match breakdown ---- "
+keys = pm_count.keys()
+keys.sort()
+total = sum(pm_count.itervalues())
+for k in keys:
+    print "F{0}/R{0}: {1} ({2:.1f}%)".format(k, pm_count[k], pm_count[k]*100./total)
