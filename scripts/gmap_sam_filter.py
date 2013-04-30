@@ -72,24 +72,19 @@ class SAMRecord:
         cur_start = start
         cur_end = start
         _strlen = 0
-        first_H = True
-        first_S = True
+        first_thing = True
         q_aln_len = 0
         for num,type in SAMRecord.cigar_rex.findall(cigar):
             _strlen += len(num) + len(type)
             num = int(num)
             if type == 'H':
                 self.qLen += num
-                if first_H: 
+                if first_thing: 
                     self.qStart += num
-                    first_S = False
-                    first_H = False
             elif type == 'S':
                 self.qLen += num
-                if first_S:
+                if first_thing:
                     self.qStart += num
-                    first_S = False
-                    first_H = False
                 else: 
                     cur_end += num
             elif type == 'I':
@@ -103,6 +98,7 @@ class SAMRecord:
                 segments.append(Interval(cur_start, cur_end))
                 cur_start = cur_end + num
                 cur_end = cur_start
+            first_thing = False
         assert len(cigar) == _strlen
         if cur_start != cur_end:
             segments.append(Interval(cur_start, cur_end))
