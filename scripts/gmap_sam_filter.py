@@ -39,19 +39,20 @@ class SAMRecord:
         self.qID = raw[0]
         self.sID = raw[2]
         if self.sID == '*': # means no match! STOP here
-            return 
+            return
         self.sStart = int(raw[3]) - 1
         self.cigar = raw[5]
         # qStart, qEnd might get changed in parse_cigar
         self.qStart = 0
-        self.qEnd = len(raw[9]) # length of SEQ
-        self.qLen = len(raw[9])
-        #self.identity = None
+        self.qEnd = None # length of SEQ
+        self.qLen = 0
         self.segments = self.parse_cigar(self.cigar, self.sStart)
         self.sEnd = self.segments[-1].end
         self.flag = SAMRecord.parse_sam_flag(int(raw[1]))
 
-        self.qCoverage = (self.qEnd - self.qStart)*100./self.qLen
+        if self.flag.strand == '-':
+            self.qStart, self.qEnd = self.qLen-self.qEnd, self.qLen-self.qStart
+        self.qCoverage = (self.qEnd - self.qStart)*1./self.qLen
         
 
     def parse_cigar(self, cigar, start):
@@ -61,7 +62,7 @@ class SAMRecord:
         D - deletion w.r.t. to ref
         N - skipped (which means splice junction)
         S - soft clipped
-        H - hard clipped
+        H - hard clipped (not shown in SEQ)
 
         ex: 50M43N3D
 
@@ -71,25 +72,33 @@ class SAMRecord:
         cur_start = start
         cur_end = start
         _strlen = 0
-        S_seen_already = False
-        num_matches = 0
-        
+        first_H = True
+        first_S = True
+        q_aln_len = 0
         for num,type in SAMRecord.cigar_rex.findall(cigar):
             _strlen += len(num) + len(type)
             num = int(num)
             if type == 'H':
-                self.qLen += num            
+                self.qLen += num
+                if first_H: 
+                    self.qStart += num
+                    first_S = False
+                    first_H = False
             elif type == 'S':
-                if not S_seen_already:
-                    self.qStart = num
-                    S_seen_already = True
-                else: # this must be the end!!
-                    self.qEnd = self.qLen - num
+                self.qLen += num
+                if first_S:
+                    self.qStart += num
+                    first_S = False
+                    first_H = False
+                else: 
                     cur_end += num
-                    break                
-            elif type == 'M' or type == 'D':
+            elif type == 'I':
+                q_aln_len += num
+            elif type == 'M':
                 cur_end += num
-                if type == 'M': num_matches += num
+                q_aln_len += num
+            elif type == 'D':
+                cur_end += num
             elif type == 'N': # junction, make a new segment
                 segments.append(Interval(cur_start, cur_end))
                 cur_start = cur_end + num
@@ -97,9 +106,8 @@ class SAMRecord:
         assert len(cigar) == _strlen
         if cur_start != cur_end:
             segments.append(Interval(cur_start, cur_end))
-            
-        # calculate identity
-        self.identity = num_matches * 100. / (self.qEnd - self.qStart)
+        self.qEnd = self.qStart + q_aln_len
+        self.qLen += q_aln_len        
         return segments
 
     @classmethod
