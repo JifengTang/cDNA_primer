@@ -187,16 +187,22 @@ def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k,
                 p3_end = len(seq) - rc.sStart
 
             is_CCS = False
-            try:
-                movie,hn,s_e = r.id.split('/')
-                s, e = map(int, s_e.split('_'))
-            except ValueError:
-                # probably a CCS read
-                # ex: m120426_214207_sherri_c100322600310000001523015009061212_s1_p0/26
-                movie,hn = r.id.split('/')
+            if r.id.endswith('/ccs'):
                 is_CCS = True
+                movie,hn,ccs_junk = r.id.split('/')
                 s = 0
                 e = len(seq)
+            else:
+                try:
+                    movie,hn,s_e = r.id.split('/')
+                    s, e = map(int, s_e.split('_'))
+                except ValueError:
+                    # probably a CCS read
+                    # ex: m120426_214207_sherri_c100322600310000001523015009061212_s1_p0/26
+                    movie,hn = r.id.split('/')
+                    is_CCS = True
+                    s = 0
+                    e = len(seq)
 
             # look for polyA/T tails
             # since we already did revcomp, must be polyA
