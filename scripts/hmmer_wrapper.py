@@ -173,7 +173,7 @@ def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k,
         ind, strand, fw, rc = pick_best_primer_combo(d_fw[r.id], d_rc[r.id], primer_indices, min_score)
         if fw is None and rc is None: # no match to either fw/rc primer on any end!
             # write the report
-            freport.write("{id}\tNA\t0\t0\t0\tNA\tNA\tNA\n".format(id=r.id))
+            freport.write("{id}\tNA\t0\t0\t0\tNA\tNA\tNA\tNA\n".format(id=r.id))
             if output_anyway:
                 fout.write(">{0}\n{1}\n".format(r.id, r.seq))
         else:
