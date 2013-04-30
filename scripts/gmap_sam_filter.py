@@ -85,8 +85,6 @@ class SAMRecord:
                 self.qLen += num
                 if first_thing:
                     self.qStart += num
-                else: 
-                    cur_end += num
             elif type == 'I':
                 q_aln_len += num
             elif type == 'M':
