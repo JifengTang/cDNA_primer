@@ -20,6 +20,7 @@ def grab_nonCCS_reads(filtered_subreads_filename, ccs_filename, output_filename)
         in_ccs = set(r.id for r in SeqIO.parse(open(ccs_filename), 'fasta'))
     
     subreads_total, subreads_nonccs = 0, 0
+    zmw_ccs_stat = {} # zmw --> 1 if has CCS, 0 otherwise
     
     f = open(output_filename, 'w')
     for r in SeqIO.parse(open(filtered_subreads_filename), 'fasta'):
@@ -28,8 +29,14 @@ def grab_nonCCS_reads(filtered_subreads_filename, ccs_filename, output_filename)
         if movieName_holeNumber not in in_ccs:
             f.write(">{0}\n{1}\n".format(r.id, r.seq))
             subreads_nonccs += 1
+            zmw_ccs_stat[movieName_holeNumber] = 0
+        else:
+            zmw_ccs_stat[movieName_holeNumber] = 1
     f.close()
-    
+
+    a = len(in_ccs)
+    b = len(zmw_ccs_stat)
+    print("% of ZMWs with CCS: {0}/{1} ({2:.1f}%)".format(a, b, a*100./b))
     print("Number of subreads: {0}".format(subreads_total))
     print("Number of CCS reads: {0}".format(len(in_ccs)))
     print("Number of non-CCS subreads: {0}".format(subreads_nonccs))

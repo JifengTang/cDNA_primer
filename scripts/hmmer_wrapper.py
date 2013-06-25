@@ -164,7 +164,7 @@ def pick_best_primer_combo(d_front, d_back, primer_indices, min_score):
         return best_ind, best_strand, g(d_back, k1), g(d_front, k2)
 
 
-def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k, see_left, see_right, min_seqlen, min_score, output_anyway=False, change_seqid=False):
+def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k, see_left, see_right, min_seqlen, min_score, output_anyway=False, change_seqid=False, must_see_polyA=False):
     fout = open(output_filename, 'w')
     freport = open(output_filename + '.primer_info.txt', 'w')
     freport.write("ID\tstrand\t5seen\tpolyAseen\t3seen\t5end\tpolyAend\t3end\tprimer\n")
@@ -226,7 +226,7 @@ def trim_barcode(primer_indices, fasta_filename, output_filename, d_fw, d_rc, k,
             else:
                 newid = "{0}/{1}/{2}_{3}".format(movie,hn,s1,e1) if change_seqid else r.id
             # only write if passes criteria or output_anyway is True
-            if ((not see_left or p5_end is not None) and (not see_right or p3_start is not None) and len(seq) >= min_seqlen) or output_anyway:
+            if ((not see_left or p5_end is not None) and (not see_right or p3_start is not None) and (not must_see_polyA or polyA_i > 0) and len(seq) >= min_seqlen) or output_anyway:
                 fout.write(">{0}\n{1}\n".format(newid, seq))
             # but write to report regardless!
             freport.write("{id}\t{strand}\t{seen5}\t{seenA}\t{seen3}\t{e5}\t{eA}\t{e3}\t{pm}\n".format(\
@@ -247,7 +247,7 @@ def worker(out_filename_hmmer, p_filename, in_filename, matrix_filename):
     print >> sys.stderr, "CMD:", cmd
     subprocess.check_call(cmd, shell=True)
 
-def main(output_dir, primer_filename, fasta_filename, output_filename, k, cpus, see_left, see_right, min_seqlen, min_score, output_anyway, change_seqid):
+def hmmer_wrapper_main(output_dir, primer_filename, fasta_filename, output_filename, k=100, cpus=8, see_left=True, see_right=True, min_seqlen=50, min_score=10, output_anyway=False, change_seqid=False, must_see_polyA=False):
     # find the matrix file PBMATRIX.txt
     matrix_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PBMATRIX.txt')
     if not os.path.exists(matrix_filename):
@@ -312,7 +312,7 @@ def main(output_dir, primer_filename, fasta_filename, output_filename, k, cpus, 
     d_back = defaultdict(lambda: None)
     parse_hmmer_dom(out_filename_hmmer, d_front, d_back, min_score)
 
-    trim_barcode(p_indices, fasta_filename, output_filename, d_front, d_back, k, see_left, see_right, min_seqlen, min_score, output_anyway, change_seqid)
+    trim_barcode(p_indices, fasta_filename, output_filename, d_front, d_back, k, see_left, see_right, min_seqlen, min_score, output_anyway, change_seqid, must_see_polyA)
     print >> sys.stderr, "Trimmed output fasta filename:", output_filename
     
     print >> sys.stderr, "Cleaning split files"
@@ -332,6 +332,7 @@ if __name__ == "__main__":
     group1.add_argument("--cpus", default=8, type=int, help="Number of CPUs to run HMMER (default: 8)")
 
     group2 = parser.add_argument_group("Primer trimming options")
+    group2.add_argument("--must-see-polyA", dest="must_see_polyA", action="store_true", default=False, help="Must see polyA/T tail (default: False)")
     group2.add_argument("--left-nosee-ok", dest="left_nosee_ok", action="store_true", default=False, help="OK if 5' end not detected (default: off)")
     group2.add_argument("--right-nosee-ok", dest="right_nosee_ok", action="store_true", default=False, help="OK if 3' end not detected (default: off)")
     group2.add_argument("--output-anyway", dest="output_anyway", action="store_true", default=False, help="Still output seqs w/ no primer (default: off)")
@@ -341,8 +342,8 @@ if __name__ == "__main__":
     group2.add_argument("-o", "--output_filename", required=True, help="Output fasta filename")
 
     args = parser.parse_args()
-    main(args.directory, args.primer_filename, args.input_filename, args.output_filename, args.primer_search_window, args.cpus,\
-        not args.left_nosee_ok, not args.right_nosee_ok, args.min_seqlen, args.min_score, args.output_anyway, args.change_seqid)
+    hmmer_wrapper_main(args.directory, args.primer_filename, args.input_filename, args.output_filename, args.primer_search_window, args.cpus,\
+        not args.left_nosee_ok, not args.right_nosee_ok, args.min_seqlen, args.min_score, args.output_anyway, args.change_seqid, must_see_polyA=args.must_see_polyA)
 
 
 
